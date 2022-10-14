@@ -14,8 +14,8 @@ class circle:
         self.color = [self.red, self.green, self.blue]
 
         # Initialize the circle's position to be random
-        self.X = random.randint(0, 500)
-        self.Y = random.randint(0, 500)
+        self.X = random.randint(0, 1920)
+        self.Y = random.randint(0, 1080)
 
         # Initialize the circle's size
         self.Size = 100
@@ -27,7 +27,14 @@ class circle:
         # Initialize the circle's velocity to be random
         self.horizontalVelocity  = random.randint(1,5)
         self.verticalVelocity    = random.randint(1,5)
+        randVar = random.randint(0,3)
 
+        if randVar == 1 or randVar == 3:
+            self.horizontalVelocity *= -1
+
+        if randVar == 2 or randVar == 3:
+            self.verticalVelocity *= -1
+        
     # Randomizes the circle's horizontal velocity
     def randomHorizontalVelocity(self):
         randVar = random.randint(1,5)
@@ -63,11 +70,16 @@ class circle:
 
 def bounce():
 
-    # Set the Width and Height of the window
-    windowWidth = 1920
-    windowHeight = 1070
+    # Initialize a pygame window
+    pygame.display.init()
+    pygame.font.init()
 
-    # Create a window and set it's size to 600x600
+    # Set the Width and Height of the window
+    windowSize = pygame.display.get_desktop_sizes()
+    windowWidth = windowSize[0][0]
+    windowHeight = windowSize[0][1]
+
+    # Create a window and set it's size to the dimensions of the monitor
     window = pygame.display.set_mode((windowWidth,windowHeight))
 
     # Set the caption for the window
@@ -138,15 +150,57 @@ def bounce():
         # Update the window with the new drawing
         pygame.display.update()
 
+        # Pause and Quit handler
+        # Check for events...
+        for event in pygame.event.get():
+
+            # ... If the user presses a key...
+            if event.type == pygame.KEYDOWN:
+
+                # ... If the user presses escape...
+                if event.key == pygame.K_ESCAPE:
+
+                    # ... End the program on the next loop
+                    running = False
+
+                # ... If the user presses space...
+                if event.key == pygame.K_SPACE:
+
+                    # ... Pause the game
+                    paused = True
+
+                    """
+### NEW STUFF START ###
+                    """
+                    print(pygame.font.get_fonts())
+                    font = pygame.font.Font(pygame.font.match_font('impact'), 320)
+                    text = font.render("Paused", True, (255,255,255), (0,0,0))
+                    textRect = text.get_rect()
+                    textRect.center = (windowWidth // 2, windowHeight // 2)
+                    window.blit(text,textRect)
+                    pygame.display.update()
+                    """
+### NEW STUFF STOP  ###
+                    """
+
+                    # While the game is paused...
+                    while paused:
+
+                        # ... Check for events...
+                        for event in pygame.event.get():
+
+                            # ... If the user presses a button...
+                            if event.type == pygame.KEYDOWN:
+
+                                # ... and that button is space...
+                                if event.key == pygame.K_SPACE:
+
+                                    # ... unpause the game
+                                    paused = False
+
         # Erase all the circles
         window.fill(windowColor)
-
-        # If the user hits Escape, quit
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    running = False
-        
+                                    
         # Wait
         pygame.time.wait(2)
 
