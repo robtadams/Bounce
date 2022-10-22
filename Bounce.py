@@ -1,11 +1,16 @@
 import pygame
+import random
 from Circle import circle
 
 def bounce():
 
+    """ Pygame Initialization """
+
     # Initialize a pygame window
     pygame.display.init()
     pygame.font.init()
+
+    """ Window Initialization and Construction """
 
     # Set the Width and Height of the window
     windowSize = pygame.display.get_desktop_sizes()[0]
@@ -24,20 +29,29 @@ def bounce():
     # Fill the screen with the window color
     window.fill(windowColor)
 
+    """ Running Initialization """
+
     # You're running, so keep running
     running = True
+
+    """ Circle Initialization and Construction """
 
     # Initialize an empty list for the circles to be stored
     circles = []
 
     # Add a number of circles to the circles[] list
     for i in range(100):
+        #randVar = random.randint(50,1000)
         thisCircle = circle()
-        thisCircle.color = (0,0,255)
+        #thisCircle.color = (0,0,255)
         circles.append(thisCircle)
 
+    """ Red Circle Initialization and Coloration """
+
     redCircle = circles[-1]
-    redCircle.color = (255,0,0)
+    #redCircle.color = (255,0,0)
+
+    """ Main Loop Start """
 
     # Keep running until the user stops
     while running:
@@ -46,7 +60,7 @@ def bounce():
         for myCircle in circles:
             
             # Move the circle
-            myCircle.moveCircle()
+            myCircle.moveCircle(windowWidth, windowHeight)
 
             # Draw the circle in its new location
             pygame.draw.ellipse(window, myCircle.color, myCircle.circleRect)

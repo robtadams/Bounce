@@ -30,7 +30,7 @@ class circle:
         if not coords:
 
             # ... Initialize pygame and get the size of the desktop
-            pygame.init()
+            pygame.display.init()
             windowSize = pygame.display.get_desktop_sizes()[0]
 
             # Set windowWidth and windowHeight to the X and Y values of windowSize
@@ -38,8 +38,8 @@ class circle:
             windowHeight    = windowSize[1] # windowSize[1] is the height of the screen
 
             # Initialize the circle's position to be random
-            self.X = random.randint(0, windowWidth)
-            self.Y = random.randint(0, windowHeight)
+            self.X = random.randint(0, windowWidth - size)
+            self.Y = random.randint(0, windowHeight - size)
             self.coords = [self.X, self.Y]
 
         # If the coordinates are defined...
@@ -141,7 +141,7 @@ class circle:
         if windowWidth == None or windowHeight == None:
 
             # ... Initialize pygame
-            pygame.init()
+            #pygame.init()
 
             # Set windowSize to be the width and height of the desktop
             windowSize = pygame.display.get_desktop_sizes()[0]
@@ -199,3 +199,9 @@ class circle:
 
         # Return True if the circle bounced off of a wall, otherwise return False
         return bounced
+
+if __name__ == "__main__":
+    thisCircle = circle()
+    print("Color: ", thisCircle.color, "\n",
+          "Coordinates: ", thisCircle.coords, "\n",
+          "Size: ", thisCircle.size, sep="")
