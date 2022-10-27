@@ -55,7 +55,7 @@ class circle:
         # Initialize the circle's size
         self.size = size
 
-        """ Elipse Initialization """
+        """ Ellipse Initialization """
 
         # Create the rectangle that pygame will use to draw the circle with
         # Rect --> [X coordinate, Y coordinate, Length, Width]
@@ -141,7 +141,7 @@ class circle:
         if windowWidth == None or windowHeight == None:
 
             # ... Initialize pygame
-            #pygame.init()
+            pygame.display.init()
 
             # Set windowSize to be the width and height of the desktop
             windowSize = pygame.display.get_desktop_sizes()[0]

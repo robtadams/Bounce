@@ -34,6 +34,48 @@ def bounce():
     # You're running, so keep running
     running = True
 
+    """ NEW STUFF """
+    
+    start = True
+
+    startX = windowWidth // 4
+    startY = windowHeight // 3
+    startColor = (255,255,255)
+    startRect = [startX, startY, windowWidth // 2, windowHeight // 3]
+    pygame.draw.rect(window, startColor, startRect)
+
+    # Set the font
+    font = pygame.font.Font(pygame.font.match_font('impact'), windowWidth // 6)
+
+    # Render the Paused font
+    text = font.render("Start", True, (0,0,0))
+
+    # Set the coordinates for the text
+    textRect = text.get_rect()
+    textRect.center = (windowWidth // 2, windowHeight // 2)
+
+    # Draw the Paused text
+    window.blit(text, textRect)
+
+    pygame.display.update()
+
+    while start:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                    mousePos    = pygame.mouse.get_pos()
+                    mouseX      = mousePos[0]
+                    mouseY      = mousePos[1]
+                    if mouseX >= startX and mouseX <= windowWidth - startX:
+                        if mouseY >= startY and mouseY <= windowHeight - startY:
+                            start = False
+                            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    start = False
+
     """ Circle Initialization and Construction """
 
     # Initialize an empty list for the circles to be stored
@@ -41,15 +83,14 @@ def bounce():
 
     # Add a number of circles to the circles[] list
     for i in range(100):
-        #randVar = random.randint(50,1000)
         thisCircle = circle()
-        #thisCircle.color = (0,0,255)
+        thisCircle.color = (0,0,255)
         circles.append(thisCircle)
 
     """ Red Circle Initialization and Coloration """
 
     redCircle = circles[-1]
-    #redCircle.color = (255,0,0)
+    redCircle.color = (255,0,0)
 
     """ Main Loop Start """
 
@@ -83,7 +124,7 @@ def bounce():
                             redCircle = circles[-1]
                             redCircle.color = (255,0,0)
                         else:
-                            running = False
+                            bounce()
 
             # ... If the user presses a key...
             if event.type == pygame.KEYDOWN:
