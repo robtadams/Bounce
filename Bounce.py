@@ -2,6 +2,55 @@ import pygame
 import random
 from Circle import circle
 
+def startMenu(window, windowWidth, windowHeight):
+
+    # If start is True, then stay on the Start Menu
+    # If start is False, then leave the Start Menu
+    start = True
+
+    # Scale the size of the Start Menu to the size of the window
+    startX = windowWidth // 4
+    startY = windowHeight // 3
+
+    # Make the Start Menu text color white
+    startTextColor = (255,255,255)
+
+    # Initialize the Start Menu rectangle and draw it to the screen
+    startRect = [startX, startY, windowWidth // 2, windowHeight // 3]
+    pygame.draw.rect(window, startTextColor, startRect)
+
+    # Set the font
+    font = pygame.font.Font(pygame.font.match_font('impact'), windowWidth // 6)
+
+    # Render the Start font
+    startText = font.render("Start", True, (0,0,0))
+
+    # Set the coordinates for the text
+    startTextRect = startText.get_rect()
+    startTextRect.center = (windowWidth // 2, windowHeight // 2)
+
+    # Draw the Start text
+    window.blit(startText, startTextRect)
+
+    pygame.display.update()
+
+    while start:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                    mousePos    = pygame.mouse.get_pos()
+                    mouseX      = mousePos[0]
+                    mouseY      = mousePos[1]
+                    if mouseX >= startX and mouseX <= windowWidth - startX:
+                        if mouseY >= startY and mouseY <= windowHeight - startY:
+                            start = False
+                            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                    start = False
+
 def bounce():
 
     """ Pygame Initialization """
@@ -34,47 +83,10 @@ def bounce():
     # You're running, so keep running
     running = True
 
-    """ NEW STUFF """
-    
-    start = True
+    """ Start Menu """
 
-    startX = windowWidth // 4
-    startY = windowHeight // 3
-    startColor = (255,255,255)
-    startRect = [startX, startY, windowWidth // 2, windowHeight // 3]
-    pygame.draw.rect(window, startColor, startRect)
-
-    # Set the font
-    font = pygame.font.Font(pygame.font.match_font('impact'), windowWidth // 6)
-
-    # Render the Paused font
-    text = font.render("Start", True, (0,0,0))
-
-    # Set the coordinates for the text
-    textRect = text.get_rect()
-    textRect.center = (windowWidth // 2, windowHeight // 2)
-
-    # Draw the Paused text
-    window.blit(text, textRect)
-
-    pygame.display.update()
-
-    while start:
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                    mousePos    = pygame.mouse.get_pos()
-                    mouseX      = mousePos[0]
-                    mouseY      = mousePos[1]
-                    if mouseX >= startX and mouseX <= windowWidth - startX:
-                        if mouseY >= startY and mouseY <= windowHeight - startY:
-                            start = False
-                            
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-
-                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
-                    start = False
+    # Launch the Start Menu
+    startMenu(window, windowWidth, windowHeight)
 
     """ Circle Initialization and Construction """
 
@@ -92,6 +104,14 @@ def bounce():
     redCircle = circles[-1]
     redCircle.color = (255,0,0)
 
+    """ Initialize Time and Clock """
+
+    # Set the pygame Clock
+    clock = pygame.time.Clock()
+
+    # Initialize the current time to be 0
+    currentTime = 0
+
     """ Main Loop Start """
 
     # Keep running until the user stops
@@ -107,7 +127,7 @@ def bounce():
             pygame.draw.ellipse(window, myCircle.color, myCircle.circleRect)
 
         # Update the window with the new drawing
-        pygame.display.update()
+        #pygame.display.update()
 
         # Pause and Quit handler
         # Check for events...
@@ -145,16 +165,15 @@ def bounce():
                     font = pygame.font.Font(pygame.font.match_font('impact'), 320)
 
                     # Render the Paused font
-                    text = font.render("Paused", True, (255,255,255), (0,0,0))
+                    pauseText = font.render("Paused", True, (255,255,255), (0,0,0))
 
                     # Set the coordinates for the text
-                    textRect = text.get_rect()
-                    textRect.center = (windowWidth // 2, windowHeight // 2)
+                    pauseTextRect = pauseText.get_rect()
+                    pauseTextRect.center = (windowWidth // 2, windowHeight // 2)
 
                     # Draw the Paused text
-                    window.blit(text,textRect)
+                    window.blit(pauseText,pauseTextRect)
                     pygame.display.update()
-
 
                     # While the game is paused...
                     while paused:
@@ -178,11 +197,24 @@ def bounce():
                                     running = False
                                     paused = False
 
-        # Erase all the circles
+        """ Time Stuff """
+        currentTime += clock.tick(60)
+        currentTime *= 2
+        printTime = str(currentTime // 1000)
+        myStr = "{:<10}".format(printTime)
+        
+        font = pygame.font.Font(pygame.font.match_font('impact'), 32)
+        timeText = font.render(myStr, True, (255,0,0))
+        timeTextRect = timeText.get_rect()
+        timeTextRect.center = (100, 100)
+        window.blit(timeText, timeTextRect)
+
+        # Update the display and erase the screen
+        pygame.display.update()
         window.fill(windowColor)
-                                    
+                      
         # Wait
-        pygame.time.wait(2)
+        #pygame.time.wait(2)
 
     # Quit out of the game and then end the program
     pygame.quit()

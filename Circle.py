@@ -66,8 +66,8 @@ class circle:
         """ Velocity Initialization """
 
         # Initialize the circle's velocity to be random
-        self.horizontalVelocity  = random.randint(1,5)
-        self.verticalVelocity    = random.randint(1,5)
+        self.horizontalVelocity  = random.randint(2,10)
+        self.verticalVelocity    = random.randint(2,10)
 
         # Randomly determine the direction of the circle's velocity
         randVar = random.randint(0,3)
@@ -91,7 +91,7 @@ class circle:
     def randomVelocity(self, direction, positive=True):
 
         # Randomly determine the circle's new velocity
-        randVar = random.randint(1,5)
+        randVar = random.randint(2,10)
 
         # If the velocity should be negative...
         if not positive:
