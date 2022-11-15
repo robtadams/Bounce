@@ -199,15 +199,12 @@ def bounce():
 
         """ Time Stuff """
         currentTime += clock.tick(60)
-        currentTime *= 2
-        printTime = str(currentTime // 1000)
-        myStr = "{:<10}".format(printTime)
+        seconds = str((currentTime // 1000) % 60).zfill(2)
+        minutes = currentTime // 60000
         
         font = pygame.font.Font(pygame.font.match_font('impact'), 32)
-        timeText = font.render(myStr, True, (255,0,0))
-        timeTextRect = timeText.get_rect()
-        timeTextRect.center = (100, 100)
-        window.blit(timeText, timeTextRect)
+        timeText = font.render(f"{minutes}:{seconds}".format(minutes, seconds), True, (255,0,0))
+        window.blit(timeText, (50, 50))
 
         # Update the display and erase the screen
         pygame.display.update()
