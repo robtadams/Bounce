@@ -4,6 +4,8 @@ from Circle import circle
 
 def startMenu(window, windowWidth, windowHeight):
 
+    """ Start Text Initialization """
+
     # If start is True, then stay on the Start Menu
     # If start is False, then leave the Start Menu
     start = True
@@ -23,7 +25,7 @@ def startMenu(window, windowWidth, windowHeight):
     font = pygame.font.Font(pygame.font.match_font('impact'), windowWidth // 6)
 
     # Render the Start font
-    startText = font.render("Start", True, (0,0,0))
+    startText = font.render("START", True, (0,0,0))
 
     # Set the coordinates for the text
     startTextRect = startText.get_rect()
@@ -32,24 +34,121 @@ def startMenu(window, windowWidth, windowHeight):
     # Draw the Start text
     window.blit(startText, startTextRect)
 
-    pygame.display.update()
+    """ Slider Initialization """
 
+    # Set the coordinates for the slider line
+    lineStartPos = [windowWidth // 4, 3 * windowHeight // 4]
+    lineEndPos = [3 * windowWidth // 4, 3 * windowHeight // 4]
+
+    # Set the color for the slider line
+    lineColor = [255, 255, 255]
+
+    # Draw the slider line
+    pygame.draw.line(window, lineColor, lineStartPos, lineEndPos)
+
+    # Set the coordinates for the slider circle
+    circleMinPos = [windowWidth // 4, 3 * windowHeight // 4]
+    circleMaxPos = [3* windowWidth // 4, 3 * windowHeight // 4]
+    circlePos = circleMinPos
+
+    # Set the color for the slider circle
+    circleColor = [0, 0, 255]
+
+    # Draw the slider circle
+    pygame.draw.circle(window, circleColor, circlePos, 20)
+
+    """ Start Loop """
+
+    # While start is True...
     while start:
+
+        # Get each event from the event queue...
         for event in pygame.event.get():
+
+            # ... If the user pressed the left mouse button ...
             if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    # ... Get the X and Y position of the mouse
                     mousePos    = pygame.mouse.get_pos()
                     mouseX      = mousePos[0]
                     mouseY      = mousePos[1]
+
+                    # If the X and Y position of the mouse is over the Start button ...
                     if mouseX >= startX and mouseX <= windowWidth - startX:
                         if mouseY >= startY and mouseY <= windowHeight - startY:
+
+                            # ... Set start to False, which begins the game on the next loop
                             start = False
-                            
+
+                    # If the X and Y position of the mouse is over the slider circle ...
+                    if mouseX >= circlePos[0] - 20 and mouseX <= circlePos[0] + 20:
+                        if mouseY >= circlePos[1] - 20 and mouseY <= circlePos[1] + 20:
+
+                            # Set mouseButtonDown to True until the user releases the left mouse button
+                            mouseButtonDown = True
+
+                            # While the user keeps the left mouse button down...
+                            while mouseButtonDown:
+
+                                # ... Check if the user presses a button ...
+                                for event in pygame.event.get():
+
+                                    # ... If the user releases the left mouse button ...
+                                    if event.type == pygame.MOUSEBUTTONUP:
+
+                                        # ... set mouseButtonDown to false, exiting the loop
+                                        mouseButtonDown = False
+                                
+                                # Erase previous circle
+                                pygame.draw.circle(window, (0, 0, 0), circlePos, 20)
+
+                                # Redraw the line
+                                pygame.draw.line(window, lineColor, lineStartPos, lineEndPos)
+
+                                # Get the mouse coordinates
+                                mousePos = pygame.mouse.get_pos()
+                                mouseX = mousePos[0]
+                                mouseY = mousePos[1]
+
+                                # If mouseX is less than the length of the slider line...
+                                if mouseX <= windowWidth // 4:
+
+                                    # ... set mouseX to the minimum point on the slider line
+                                    mouseX = windowWidth // 4
+
+                                # If mouseX is greater than the length of the slider line...
+                                elif mouseX >= 3 * (windowWidth // 4):
+
+                                    # ... set mouseX to the maximum point on the slider line
+                                    mouseX = 3 * (windowWidth // 4)                                    
+                                
+                                # Set the X position of the circle to the X position of the mouse
+                                circlePos[0] = mouseX
+
+                                # Draw the circle at the mouse coordinates
+                                pygame.draw.circle(window, circleColor, circlePos, 20)
+
+                                # Update the screen
+                                pygame.display.update()
+
+
+            # ... If the user pressed a key ...          
             if event.type == pygame.KEYDOWN:
+
+                # ... and that key is Escape ...
                 if event.key == pygame.K_ESCAPE:
+
+                    # ... Quit out of the game
                     pygame.quit()
 
+                # ... and that key is Space or Enter ...
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+
+                    # ... Set start to False, which begins the game on the next loop
                     start = False
+
+        # Update the screen
+        pygame.display.update()            
 
 def bounce():
 
