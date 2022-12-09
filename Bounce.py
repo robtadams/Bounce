@@ -193,8 +193,8 @@ def bounce():
 
     # Set the Width and Height of the window
     windowSize = pygame.display.get_desktop_sizes()[0]
-    windowWidth = windowSize[0]
-    windowHeight = windowSize[1]
+    windowWidth = windowSize[0] // 2
+    windowHeight = windowSize[1] // 2
 
     # Create a window and set it's size to the dimensions of the monitor
     window = pygame.display.set_mode((windowWidth,windowHeight))
@@ -225,7 +225,7 @@ def bounce():
 
     # Add a number of circles to the circles[] list
     for i in range(numberOfCircles):
-        thisCircle = circle()
+        thisCircle = circle(windowSize=(windowWidth, windowHeight))
         thisCircle.color = (0,0,255)
         circles.append(thisCircle)
 

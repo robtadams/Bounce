@@ -3,7 +3,7 @@ import pygame
 
 class circle:
 
-    def __init__(self, color=None, coords=None, size=100):
+    def __init__(self, color=None, coords=None, windowSize=None, size=100):
 
         """ Color Initialization"""
 
@@ -29,9 +29,12 @@ class circle:
         # If coordinates are not defined...
         if not coords:
 
-            # ... Initialize pygame and get the size of the desktop
-            pygame.display.init()
-            windowSize = pygame.display.get_desktop_sizes()[0]
+            # If windowSize is not defined ...
+            if not windowSize:
+                
+                # ... Initialize pygame and get the size of the desktop
+                pygame.display.init()
+                windowSize = pygame.display.get_desktop_sizes()[0]
 
             # Set windowWidth and windowHeight to the X and Y values of windowSize
             windowWidth     = windowSize[0] # windowSize[0] is the width of the screen
