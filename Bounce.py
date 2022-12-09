@@ -22,10 +22,10 @@ def startMenu(window, windowWidth, windowHeight):
     pygame.draw.rect(window, startTextColor, startRect)
 
     # Set the font
-    font = pygame.font.Font(pygame.font.match_font('impact'), windowWidth // 6)
+    startFont = pygame.font.Font(pygame.font.match_font('impact'), windowWidth // 6)
 
     # Render the Start font
-    startText = font.render("START", True, (0,0,0))
+    startText = startFont.render("START", True, (0,0,0))
 
     # Set the coordinates for the text
     startTextRect = startText.get_rect()
@@ -56,6 +56,16 @@ def startMenu(window, windowWidth, windowHeight):
 
     # Draw the slider circle
     pygame.draw.circle(window, circleColor, circlePos, 20)
+
+    # Set the number of circles to be drawn
+    numberOfCircles = 1
+
+    numberFont = pygame.font.Font(pygame.font.match_font('impact'), windowWidth // 10)
+    numberText = numberFont.render(str(numberOfCircles), True, (255, 255, 255))
+    numberTextRect = numberText.get_rect()
+    numberTextRect.center = [windowWidth // 8, windowHeight // 2]
+
+    window.blit(numberText, numberTextRect)
 
     """ Start Loop """
 
@@ -128,9 +138,27 @@ def startMenu(window, windowWidth, windowHeight):
                                 # Draw the circle at the mouse coordinates
                                 pygame.draw.circle(window, circleColor, circlePos, 20)
 
+                                sliderDistance = windowWidth // 2
+                                sliderUnit = sliderDistance / 100
+                                minCirclePoint = windowWidth // 4
+
+                                numberOfCircles = (circlePos[0] - minCirclePoint) // sliderUnit
+
+                                if numberOfCircles <= 1:
+                                    numberOfCircles = 1
+
+                                numberFont = pygame.font.Font(pygame.font.match_font('impact'), windowWidth // 10)
+                                numberText = numberFont.render(str(int(numberOfCircles)), True, (255, 255, 255))
+                                numberTextRect = numberText.get_rect()
+                                numberTextRect.center = [windowWidth // 8, windowHeight // 2]
+
+                                pygame.draw.rect(window, (0,0,0), [0, windowHeight // 3,
+                                                                   windowWidth // 4, windowHeight // 3])
+
+                                window.blit(numberText, numberTextRect)
+
                                 # Update the screen
                                 pygame.display.update()
-
 
             # ... If the user pressed a key ...          
             if event.type == pygame.KEYDOWN:
@@ -140,6 +168,7 @@ def startMenu(window, windowWidth, windowHeight):
 
                     # ... Quit out of the game
                     pygame.quit()
+                    return True
 
                 # ... and that key is Space or Enter ...
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
@@ -148,7 +177,9 @@ def startMenu(window, windowWidth, windowHeight):
                     start = False
 
         # Update the screen
-        pygame.display.update()            
+        pygame.display.update()
+
+    return numberOfCircles
 
 def bounce():
 
@@ -185,7 +216,7 @@ def bounce():
     """ Start Menu """
 
     # Launch the Start Menu
-    startMenu(window, windowWidth, windowHeight)
+    numberOfCircles = int(startMenu(window, windowWidth, windowHeight))
 
     """ Circle Initialization and Construction """
 
@@ -193,7 +224,7 @@ def bounce():
     circles = []
 
     # Add a number of circles to the circles[] list
-    for i in range(100):
+    for i in range(numberOfCircles):
         thisCircle = circle()
         thisCircle.color = (0,0,255)
         circles.append(thisCircle)
@@ -228,21 +259,37 @@ def bounce():
         # Update the window with the new drawing
         #pygame.display.update()
 
-        # Pause and Quit handler
+        """ Pause and Quit Handler """
+
         # Check for events...
         for event in pygame.event.get():
-
+            
+            # ... If the user clicks on the mouse ...
             if event.type == pygame.MOUSEBUTTONDOWN:
+
+                # ... Get the coordinates of the cursor ...
                 mousePos    = pygame.mouse.get_pos()
                 mouseX      = mousePos[0]
                 mouseY      = mousePos[1]
+
+                # ... If the mouse is over the Red Circle ...
                 if mouseX >= redCircle.X and mouseX <= (redCircle.X + redCircle.size):
                     if mouseY >= redCircle.Y and mouseY <= (redCircle.Y + redCircle.size):
+
+                        # ... Get rid of that circle
                         circles.pop()
+
+                        # Then, if there are still more circles on screen ...
                         if len(circles) > 0:
+
+                            # ... Set another circle as the Red Circle
                             redCircle = circles[-1]
                             redCircle.color = (255,0,0)
+
+                        # Otherwise, if there are no more circles on screen ...
                         else:
+
+                            # ... Reset the game
                             bounce()
 
             # ... If the user presses a key...
@@ -261,10 +308,10 @@ def bounce():
                     paused = True
 
                     # Set the font
-                    font = pygame.font.Font(pygame.font.match_font('impact'), 320)
+                    pauseFont = pygame.font.Font(pygame.font.match_font('impact'), 320)
 
                     # Render the Paused font
-                    pauseText = font.render("Paused", True, (255,255,255), (0,0,0))
+                    pauseText = pauseFont.render("PAUSED", True, (0,0,0), (255,255,255))
 
                     # Set the coordinates for the text
                     pauseTextRect = pauseText.get_rect()
@@ -288,6 +335,7 @@ def bounce():
 
                                     # ... unpause the game
                                     paused = False
+                                    clock.tick(60)
 
                                 # ... and that button is escape...
                                 if event.key == pygame.K_ESCAPE:
@@ -297,26 +345,22 @@ def bounce():
                                     paused = False
 
         """ Time Stuff """
+
         currentTime += clock.tick(60)
         seconds = str((currentTime // 1000) % 60).zfill(2)
         minutes = currentTime // 60000
         
-        font = pygame.font.Font(pygame.font.match_font('impact'), 32)
-        timeText = font.render(f"{minutes}:{seconds}".format(minutes, seconds), True, (255,0,0))
+        timeFont = pygame.font.Font(pygame.font.match_font('impact'), 32)
+        timeText = timeFont.render(f"{minutes}:{seconds}".format(minutes, seconds), True, (255,0,0))
         window.blit(timeText, (50, 50))
 
         # Update the display and erase the screen
         pygame.display.update()
         window.fill(windowColor)
-                      
-        # Wait
-        #pygame.time.wait(2)
 
     # Quit out of the game and then end the program
     pygame.quit()
     return True
 
-def main():
+if __name__ == "__main__":
     bounce()
-    
-main()
