@@ -50,12 +50,13 @@ def startMenu(window, windowWidth, windowHeight):
     circleMinPos = [windowWidth // 4, 3 * windowHeight // 4]
     circleMaxPos = [3* windowWidth // 4, 3 * windowHeight // 4]
     circlePos = circleMinPos
+    circleSize = windowWidth // 50
 
     # Set the color for the slider circle
     circleColor = [0, 0, 255]
 
     # Draw the slider circle
-    pygame.draw.circle(window, circleColor, circlePos, 20)
+    pygame.draw.circle(window, circleColor, circlePos, circleSize)
 
     # Set the number of circles to be drawn
     numberOfCircles = 1
@@ -110,7 +111,7 @@ def startMenu(window, windowWidth, windowHeight):
                                         mouseButtonDown = False
                                 
                                 # Erase previous circle
-                                pygame.draw.circle(window, (0, 0, 0), circlePos, 20)
+                                pygame.draw.circle(window, (0, 0, 0), circlePos, circleSize)
 
                                 # Redraw the line
                                 pygame.draw.line(window, lineColor, lineStartPos, lineEndPos)
@@ -136,7 +137,7 @@ def startMenu(window, windowWidth, windowHeight):
                                 circlePos[0] = mouseX
 
                                 # Draw the circle at the mouse coordinates
-                                pygame.draw.circle(window, circleColor, circlePos, 20)
+                                pygame.draw.circle(window, circleColor, circlePos, circleSize)
 
                                 sliderDistance = windowWidth // 2
                                 sliderUnit = sliderDistance / 100
@@ -193,8 +194,8 @@ def bounce():
 
     # Set the Width and Height of the window
     windowSize = pygame.display.get_desktop_sizes()[0]
-    windowWidth = windowSize[0] // 2
-    windowHeight = windowSize[1] // 2
+    windowWidth = windowSize[0] // 4
+    windowHeight = windowSize[1] // 4
 
     # Create a window and set it's size to the dimensions of the monitor
     window = pygame.display.set_mode((windowWidth,windowHeight))
